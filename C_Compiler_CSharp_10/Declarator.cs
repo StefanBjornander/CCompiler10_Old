@@ -28,18 +28,18 @@ namespace CCompiler {
             break;
 
           case Sort.Array:
-            Assert.Error(newType.IsComplete(),
+            Error.Check(newType.IsComplete(),
                          Message.Array_of_incomplete_type_not_allowed);
-            Assert.Error(!newType.IsFunction(),
+            Error.Check(!newType.IsFunction(),
                          Message.Array_of_function_not_allowed);
             m_lastType.ArrayType = newType;
             m_lastType = newType;
             break;
 
           case Sort.Function:
-            Assert.Error(!newType.IsArray(),
+            Error.Check(!newType.IsArray(),
                          Message.Function_cannot_return_array);
-            Assert.Error(!newType.IsFunction(),
+            Error.Check(!newType.IsFunction(),
                          Message.Function_cannot_return_function);
             m_lastType.ReturnType = newType;
             m_lastType = newType;

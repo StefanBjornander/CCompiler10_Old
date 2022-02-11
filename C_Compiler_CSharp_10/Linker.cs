@@ -21,14 +21,13 @@ namespace CCompiler {
         m_globalMap.Add(uniqueName, staticSymbolWindows);
       }
       else {
-        Assert.Error(uniqueName.EndsWith(Symbol.NumberId),
-                     Symbol.SimpleName(uniqueName),
-                     Message.Duplicate_global_name);
+        Error.Check(uniqueName.EndsWith(Symbol.NumberId),
+                     SimpleName(uniqueName), Message.Duplicate_global_name);
       }
     }
 
     public void Generate(FileInfo targetFile) {
-      Assert.ErrorXXX(m_globalMap.ContainsKey(AssemblyCodeGenerator.InitializerName));
+      Debug.Assert(m_globalMap.ContainsKey(AssemblyCodeGenerator.InitializerName));
       StaticSymbolWindows initializerInfo = m_globalMap[AssemblyCodeGenerator.InitializerName];
       m_globalList.Add(initializerInfo);
       m_totalSize += initializerInfo.ByteList.Count;
@@ -52,12 +51,12 @@ namespace CCompiler {
       }
 
       StaticSymbolWindows mainInfo;
-      Assert.Error(m_globalMap.TryGetValue("main", out mainInfo),
+      Error.Check(m_globalMap.TryGetValue("main", out mainInfo),
                    "non-static main", Message.Function_missing);
       GenerateTrace(mainInfo);
       
       if (pathNameSymbol != null) {
-        Assert.ErrorXXX(!m_globalList.Contains(pathNameSymbol));
+        Debug.Assert(!m_globalList.Contains(pathNameSymbol));
         m_globalList.Add(pathNameSymbol);
         m_addressMap.Add(pathNameSymbol.UniqueName, m_totalSize);
         m_totalSize += (int) pathNameSymbol.ByteList.Count;
@@ -98,9 +97,9 @@ namespace CCompiler {
           new HashSet<string>(staticSymbol.AccessMap.Values);
         foreach (string accessName in accessNameSet) {
           StaticSymbolWindows accessSymbol;
-          Assert.Error(m_globalMap.TryGetValue(accessName, out accessSymbol),
+          Error.Check(m_globalMap.TryGetValue(accessName, out accessSymbol),
                        accessName, Message.Object_missing_in_linking);
-          Assert.ErrorXXX(accessSymbol != null);
+          Debug.Assert(accessSymbol != null);
           GenerateTrace(accessSymbol);
         }
 
@@ -108,9 +107,9 @@ namespace CCompiler {
           new HashSet<string>(staticSymbol.CallMap.Values);
         foreach (string callName in callNameSet) {
           StaticSymbolWindows funcSymbol;
-          Assert.Error(m_globalMap.TryGetValue(callName, out funcSymbol),
+          Error.Check(m_globalMap.TryGetValue(callName, out funcSymbol),
                        callName, Message.Function_missing_in_linking);
-          Assert.Error(funcSymbol != null, Symbol.SimpleName(callName), 
+          Error.Check(funcSymbol != null, SimpleName(callName), 
                        Message.Missing_external_function);
           GenerateTrace(funcSymbol);
         }      
@@ -157,7 +156,7 @@ namespace CCompiler {
       }
     }
 
-    private void GenerateCallX(int startAddress, IDictionary<int, string> callMap,
+    /*private void GenerateCallX(int startAddress, IDictionary<int, string> callMap,
                               List<byte> byteList) {
       const byte NopOperator = -112 + 256;
       const byte ShortJumpOperator = -21 + 256;
@@ -183,7 +182,7 @@ namespace CCompiler {
           byteList[address + 1] = (byte) ((sbyte) (relativeAddress >> 8));
         }
       }
-    }
+    }*/
 
     private void GenerateCall(int startAddress,
                               IDictionary<int, string> callMap,
@@ -226,6 +225,11 @@ namespace CCompiler {
           byteList[address + 1] = (byte) ((sbyte) (relativeAddress >> 8));
         }
       }
+    }
+    public static string SimpleName(string name) {
+      int index = name.LastIndexOf(Symbol.SeparatorId);
+      return ((index != -1) ? name.Substring(index + 1)
+                            : name).Replace(Symbol.NumberId, "");
     }
   }
 }

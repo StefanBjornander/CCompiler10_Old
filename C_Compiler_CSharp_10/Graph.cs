@@ -1,15 +1,6 @@
 using System.Collections.Generic;
 
 namespace CCompiler {
-  public class Edge<VertexType> {
-    private VertexType m_vertex1, m_vertex2;
-
-    public Edge(VertexType vertex1, VertexType vertex2) {
-      m_vertex1 = vertex1;
-      m_vertex2 = vertex2;
-    }
-  }
-
   public class Graph<VertexType> {
     private ISet<VertexType> m_vertexSet;
     private ISet<Pair<VertexType,VertexType>> m_edgeSet;
@@ -37,7 +28,7 @@ namespace CCompiler {
     public ISet<Pair<VertexType,VertexType>> EdgeSet {
       get { return m_edgeSet; }
     }
-
+//The neighbourSet method goes through all edges and add each found neighbor to the vertex.
     public ISet<VertexType> GetNeighbourSet(VertexType vertex) {
       ISet<VertexType> neighbourSet = new HashSet<VertexType>();
     
@@ -53,11 +44,11 @@ namespace CCompiler {
     
       return neighbourSet;
     }
-
+//E.3.2. 	Addition and Removal of Vertices and Edges
     public void AddVertex(VertexType vertex) {
       m_vertexSet.Add(vertex);
     }
- 
+
     public void EraseVertex(VertexType vertex) {
       ISet<Pair<VertexType,VertexType>> edgeSetCopy =
         new HashSet<Pair<VertexType,VertexType>>(m_edgeSet);
@@ -82,7 +73,8 @@ namespace CCompiler {
         new Pair<VertexType,VertexType>(vertex1, vertex2);
       m_edgeSet.Remove(edge);
     }
-
+//E.3.3. 	Graph Partition
+//The method partitionate divides the graph into free subgraphs; that is, subgraphs which vertices have no neighbors in any of the other free subgraphs. First, we go through the vertices and perform a deep search to find all vertices reachable from the vertex. Then we generate a subgraph for each such vertex set.
     public ISet<Graph<VertexType>> Split() {
       ISet<ISet<VertexType>> subgraphSet = new HashSet<ISet<VertexType>>();
 
@@ -100,7 +92,7 @@ namespace CCompiler {
 
       return graphSet;
     }
-
+//The DeepFirstSearch method search recursively through the graph in order to find all vertices reachable from the given vertex. To avoid cyclic search, the search is terminated if the vertex is already a member of the result set.
     private void DeepSearch(VertexType vertex, ISet<VertexType> resultSet) {
       if (!resultSet.Contains(vertex)) {
         resultSet.Add(vertex);
@@ -111,9 +103,10 @@ namespace CCompiler {
         }
       }
     }
-
+//The InducedSubGraph method goes through the edge set and add all edges which both end vertices are members of the vertex set.
     private Graph<VertexType> InducedSubGraph(ISet<VertexType> vertexSet) {
-      ISet<Pair<VertexType,VertexType>> resultEdgeSet = new HashSet<Pair<VertexType,VertexType>>();
+      ISet<Pair<VertexType,VertexType>> resultEdgeSet =
+        new HashSet<Pair<VertexType,VertexType>>();
    
       foreach (Pair<VertexType,VertexType> edge in m_edgeSet) {
         if (vertexSet.Contains(edge.First) &&

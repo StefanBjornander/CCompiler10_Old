@@ -7,6 +7,10 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
+  </PropertyGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\C_Compiler_CSharp_10\C_Compiler_CSharp_10.csproj" />
   </ItemGroup>

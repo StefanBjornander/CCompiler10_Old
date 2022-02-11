@@ -21,7 +21,6 @@ TOKEN [^a-zA-Z0-9()#,\"\' \t\r\n\f\0]+
 "##" { yylval.name = "##"; return ((int) Tokens.DOUBLE_SHARP); }
 "#"  { yylval.name = "#"; return ((int) Tokens.SHARP); }
 "," { yylval.name = ","; return ((int) Tokens.COMMA); }
-//"\0" { /*CCompiler_Pre.Scanner.NewlineCount = 0;*/ yylval.name = ""; return ((int) Tokens.END_OF_LINE); }
 
 {NAME} {
   yylval.name = yytext;
@@ -74,8 +73,8 @@ TOKEN [^a-zA-Z0-9()#,\"\' \t\r\n\f\0]+
   }
 }
 
-. { CCompiler.Assert.Error("<" + yytext + ">",
-    CCompiler.Message.Unknown_character); }
+. { CCompiler.Error.Report("<" + yytext + ">",
+                           CCompiler.Message.Unknown_character); }
 
 /*. { if (yytext.Equals("\0")) {
       Console.Out.WriteLine("END_OF_LINE");
@@ -83,6 +82,6 @@ TOKEN [^a-zA-Z0-9()#,\"\' \t\r\n\f\0]+
       return ((int) Tokens.END_OF_LINE);
     }
     else {
-      CCompiler.Assert.Error("<" + yytext + ">", "unknown character");
+      CCompiler.Error.Report("<" + yytext + ">", "unknown character");
     }
   }*/

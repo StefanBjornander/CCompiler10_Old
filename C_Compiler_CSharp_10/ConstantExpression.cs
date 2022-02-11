@@ -205,8 +205,8 @@ namespace CCompiler {
       Type leftType = leftSymbol.Type,
            rightType = rightSymbol.Type;
 
-      BigInteger leftValue = (BigInteger)leftSymbol.Value,
-                 rightValue = (BigInteger)rightSymbol.Value,
+      BigInteger leftValue = (BigInteger) leftSymbol.Value,
+                 rightValue = (BigInteger) rightSymbol.Value,
                  resultValue = 0;
 
       switch (middleOp) {

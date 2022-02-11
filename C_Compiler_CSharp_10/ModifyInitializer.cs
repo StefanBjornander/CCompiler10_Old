@@ -20,7 +20,7 @@ namespace CCompiler {
         List<object> totalList =
           new List<object>(), currentList = new List<object>();
         int arraySize = dimensionToSizeMap[dimension];
-        Assert.ErrorXXX(arraySize > 0);
+        Debug.Assert(arraySize > 0);
 
         foreach (object member in list) {
           if (initializerToDimensionMap[member] < dimension) {

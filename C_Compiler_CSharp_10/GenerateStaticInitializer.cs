@@ -9,7 +9,7 @@ namespace CCompiler {
       if (fromInitializer is Expression) {
         Expression fromExpression = (Expression) fromInitializer;
         Symbol fromSymbol = fromExpression.Symbol;
-        Assert.Error(fromSymbol.IsExternOrStatic(), fromSymbol,
+        Error.Check(fromSymbol.IsExternOrStatic(), fromSymbol,
                      Message.Non__static_initializer);
         Type fromType = fromSymbol.Type;
 
@@ -21,7 +21,7 @@ namespace CCompiler {
             toType.ArraySize = text.Length + 1;
           }
           else {
-            Assert.Error(text.Length < toType.ArraySize, toType,
+            Error.Check(text.Length < toType.ArraySize, toType,
                          Message.Too_many_initializers_in_array);
           }
 
@@ -29,12 +29,13 @@ namespace CCompiler {
                                       fromSymbol.Type.Sort, text));
         }
         else if (toType.IsPointer() && fromType.IsArrayFunctionOrString()) {
-          Assert.ErrorXXX((fromType.IsString() && toType.PointerType.IsChar())
-                        ||(fromType.IsArray() &&
-                           fromType.ArrayType.Equals(toType.PointerType)) ||
-                        (fromType.IsFunction() &&
-                         fromType.Equals(toType.PointerType)));
-          StaticAddress staticAddress =
+          Error.Check((fromType.IsString() && toType.PointerType.IsChar()) ||
+                       (fromType.IsArray() &&
+                        fromType.ArrayType.Equals(toType.PointerType)) ||
+                       (fromType.IsFunction() &&
+                        fromType.Equals(toType.PointerType)),
+                       Message.Invalid_type_cast);
+                    StaticAddress staticAddress =
             new StaticAddress(fromSymbol.UniqueName, 0);
           codeList.Add(new MiddleCode(MiddleOperator.Initializer,
                                       toType.Sort, staticAddress));
@@ -43,7 +44,7 @@ namespace CCompiler {
           Expression toExpression =
             TypeCast.ImplicitCast(fromExpression, toType);
           Symbol toSymbol = toExpression.Symbol;
-          Assert.Error(toSymbol.Value != null, toSymbol,
+          Error.Check(toSymbol.Value != null, toSymbol,
                        Message.Non__constant_expression);
           codeList.Add(new MiddleCode(MiddleOperator.Initializer,
                                       toSymbol.Type.Sort, toSymbol.Value));
@@ -60,7 +61,7 @@ namespace CCompiler {
                 toType.ArraySize = fromList.Count;
               }
               else {
-                Assert.Error(fromList.Count <= toType.ArraySize,
+                Error.Check(fromList.Count <= toType.ArraySize,
                              toType, Message.Too_many_initializers_in_array);
               }
 
@@ -79,7 +80,7 @@ namespace CCompiler {
           
           case Sort.Struct: {
               List<Symbol> memberList = toType.MemberList;
-              Assert.Error(fromList.Count <= memberList.Count, toType,
+              Error.Check(fromList.Count <= memberList.Count, toType,
                            Message.Too_many_initializers_in_struct);
 
               int initSize = 0;
@@ -100,7 +101,7 @@ namespace CCompiler {
           
           case Sort.Union: {
               List<Symbol> memberList = toType.MemberList;
-              Assert.Error(fromList.Count == 1, toType,
+              Error.Check(fromList.Count == 1, toType,
                            Message.Only_one_Initlizer_allowed_in_unions);
 
               Symbol memberSymbol = memberList[0];
@@ -116,7 +117,7 @@ namespace CCompiler {
             break;
 
           default:
-            Assert.Error(toType, Message.
+            Error.Report(toType, Message.
                          Only_array_struct_or_union_can_be_initialized_by_a_list);
             break;
         }

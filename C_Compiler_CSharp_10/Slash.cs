@@ -38,7 +38,7 @@ namespace CCompiler {
             int octValue = 64 * CharToOctal(char1) +
                             8 * CharToOctal(char2) +
                                 CharToOctal(char3);
-            Assert.Error(octValue <= 255, Message.Invalid_octal_sequence);
+            Error.Check(octValue <= 255, Message.Invalid_octal_sequence);
             buffer.Remove(index, 4);
             buffer.Insert(index, (char) octValue);
           }
@@ -65,12 +65,12 @@ namespace CCompiler {
               buffer.Insert(index, (char) hexValue);
             }
             else {
-              Assert.Error(char1.ToString(),
+              Error.Report(char1.ToString(),
                            Message.Invalid_hexadecimal_code);
             }
           }
           else {
-            Assert.Error(buffer[index + 1].ToString(),
+            Error.Report(buffer[index + 1].ToString(),
                          Message.Invalid_slash_sequence);
           }
         }

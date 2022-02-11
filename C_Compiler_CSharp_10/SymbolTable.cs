@@ -76,9 +76,9 @@ namespace CCompiler {
         Symbol oldSymbol;
 
         if (m_entryMap.TryGetValue(name, out oldSymbol)) {
-          Assert.Error(oldSymbol.IsExtern() || newSymbol.IsExtern(),
+          Error.Check(oldSymbol.IsExtern() || newSymbol.IsExtern(),
                        name, Message.Name_already_defined);
-          Assert.Error(oldSymbol.Type.Equals(newSymbol.Type),
+          Error.Check(oldSymbol.Type.Equals(newSymbol.Type),
                        name, Message.Different_types_in_redeclaration);
 
           newSymbol.UniqueName = oldSymbol.UniqueName;
@@ -131,7 +131,7 @@ namespace CCompiler {
       Type oldType;
 
       if (m_tagMap.TryGetValue(name, out oldType)) {
-        Assert.Error(!oldType.IsEnumerator() &&
+        Error.Check(!oldType.IsEnumerator() &&
                      (oldType.Sort == newType.Sort), name,
                      Message.Name_already_defined);
 
@@ -140,7 +140,7 @@ namespace CCompiler {
           oldType.MemberList = newType.MemberList;
         }
         else {
-          Assert.Error(newType.MemberMap == null, name,
+          Error.Check(newType.MemberMap == null, name,
                        Message.Name_already_defined);
         }
 

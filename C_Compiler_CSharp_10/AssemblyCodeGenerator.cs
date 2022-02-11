@@ -85,6 +85,12 @@ namespace CCompiler {
 
         AddAssemblyCode(AssemblyOperator.comment, middleCode.ToString());
 
+        /*if ((SymbolTable.CurrentFunction != null) &&
+            SymbolTable.CurrentFunction.Name.Equals("printArgument") &&
+            (middleIndex == 23)) {
+          int i = 1;
+        }*/
+
         switch (middleCode.Operator) {
           case MiddleOperator.PreCall:
             FunctionPreCall(middleCode);
@@ -242,11 +248,12 @@ namespace CCompiler {
             break;
 
           case MiddleOperator.DecreaseStack:
-            Assert.ErrorXXX((--m_floatStackSize) >= 0);
+            --m_floatStackSize;
+            Debug.Assert(m_floatStackSize >= 0);
             break;
 
           /*case MiddleOperator.CheckTrackMapFloatStack:
-            Assert.ErrorXXX((m_trackMap.Count == 0) &&
+            Debug.Assert((m_trackMap.Count == 0) &&
                           (m_floatStackSize == 0));
             break;*/
 
@@ -312,7 +319,7 @@ namespace CCompiler {
                 StructUnionGetReturnValue(middleCode);
               }
               else if (returnSymbol.Type.IsFloating()) {
-                Assert.Error((++m_floatStackSize) <= FloatingStackMaxSize,
+                Error.Check((++m_floatStackSize) <= FloatingStackMaxSize,
                              null, Message.Floating_stack_overflow);
               }
               else {
@@ -328,7 +335,7 @@ namespace CCompiler {
                 StructUnionSetReturnValue(middleCode);
               }
               else if (returnSymbol.Type.IsFloating()) {
-                Assert.ErrorXXX((--m_floatStackSize) == 0);
+                Debug.Assert((--m_floatStackSize) == 0);
               }
               else {
                 IntegralSetReturnValue(middleCode);
@@ -348,7 +355,7 @@ namespace CCompiler {
             break;
 
           default:
-            Assert.ErrorXXX(false);
+            Debug.Assert(false);
             break;
         }
       }
@@ -394,7 +401,7 @@ namespace CCompiler {
     // Function Calls -----------------------------------------------------------------------
 
     public Register BaseRegister(Symbol symbol) {
-      Assert.ErrorXXX((symbol == null) || symbol.IsAutoOrRegister());
+      Debug.Assert((symbol == null) || symbol.IsAutoOrRegister());
     
       if (SymbolTable.CurrentFunction.Type.IsVariadic() &&
           (symbol != null) && !symbol.Parameter) {
@@ -569,7 +576,7 @@ namespace CCompiler {
         }
       }
 
-      Assert.ErrorXXX(m_topStack.Count > 0);
+      Debug.Assert(m_topStack.Count > 0);
       int topSize = m_topStack.Pop();
 
       if (topSize > 0) {
@@ -631,7 +638,7 @@ namespace CCompiler {
       }
       else {
         track = new Track(symbol, register);
-        //Assert.ErrorXXX(!(symbol.Type.IsFunction()));
+        //Debug.Assert(!(symbol.Type.IsFunction()));
 
         if (symbol.Value is BigInteger)  {
           AddAssemblyCode(AssemblyOperator.mov, track, symbol.Value);
@@ -674,7 +681,7 @@ namespace CCompiler {
               break;
             }    
           }
-          Assert.ErrorXXX(lastLine >= 0);
+          Debug.Assert(lastLine >= 0);
 
           AssemblyCode setCode =
             new AssemblyCode(AssemblyOperator.set_track_size,
@@ -698,11 +705,11 @@ namespace CCompiler {
       else {
         Symbol addressSymbol = new Symbol(new Type(symbol.Type));
         Track addressTrack = new Track(addressSymbol, register);
-        Assert.ErrorXXX((addressTrack.Register == null) ||
+        Debug.Assert((addressTrack.Register == null) ||
                         RegisterAllocator.VariadicFunctionPointerRegisterSet.
                         Contains(addressTrack.Register.Value));
         addressTrack.Pointer = true;
-        Assert.ErrorXXX(!(symbol.Value is BigInteger));
+        Debug.Assert(!(symbol.Value is BigInteger));
 
         AddAssemblyCode(AssemblyOperator.mov, addressTrack, Base(symbol));
 
@@ -720,7 +727,7 @@ namespace CCompiler {
 
     public void Return(MiddleCode middleCode, int middleIndex) {
       if (SymbolTable.CurrentFunction.UniqueName.Equals("main")) {
-        Assert.ErrorXXX(m_floatStackSize == 0);
+        Debug.Assert(m_floatStackSize == 0);
         AddAssemblyCode(AssemblyOperator.cmp,
                         AssemblyCode.RegularFrameRegister,
                         SymbolTable.ReturnAddressOffset,
@@ -732,7 +739,7 @@ namespace CCompiler {
       }
       else {
         SetReturnValue(middleCode);
-        Assert.ErrorXXX(m_floatStackSize == 0);
+        Debug.Assert(m_floatStackSize == 0);
         Return();
       }
     }
@@ -745,7 +752,8 @@ namespace CCompiler {
           StructUnionSetReturnValue(middleCode);
         }
         else if (returnSymbol.Type.IsFloating()) {
-          Assert.ErrorXXX((--m_floatStackSize) == 0);
+          --m_floatStackSize;
+          Debug.Assert(m_floatStackSize == 0);
         }
         else {
           IntegralSetReturnValue(middleCode);
@@ -770,7 +778,7 @@ namespace CCompiler {
 
     public void IntegralGetReturnValue(MiddleCode middleCode) {
       Symbol returnSymbol = (Symbol) middleCode[0];
-      Assert.ErrorXXX(m_returnTrack != null);
+      Debug.Assert(m_returnTrack != null);
       m_trackMap.Add(returnSymbol, m_returnTrack);
       AddAssemblyCode(AssemblyOperator.empty, m_returnTrack);
 
@@ -911,14 +919,14 @@ namespace CCompiler {
 
     private void InitializerZero(MiddleCode middleCode) {
       int size = (int) middleCode[0];
-      Assert.ErrorXXX(size > 0);
+      Debug.Assert(size > 0);
       AddAssemblyCode(AssemblyOperator.define_zero_sequence, size);
     }
 
     // Base and Offset
 
     private object Base(Symbol symbol) {
-      Assert.ErrorXXX(!(symbol.Value is BigInteger));
+      Debug.Assert(!(symbol.Value is BigInteger));
 
       if (symbol.Value is StaticAddress) {
         StaticAddress staticAddress = (StaticAddress) symbol.Value;
@@ -926,7 +934,7 @@ namespace CCompiler {
       }
       else if (symbol.AddressSymbol != null) {
         Track addressTrack = LoadValueToRegister(symbol.AddressSymbol);
-        Assert.ErrorXXX((addressTrack.Register == null) ||
+        Debug.Assert((addressTrack.Register == null) ||
                         RegisterAllocator.VariadicFunctionPointerRegisterSet.
                         Contains(addressTrack.Register.Value));
         addressTrack.Pointer = true;
@@ -942,7 +950,7 @@ namespace CCompiler {
     }
 
     private int Offset(Symbol symbol) {
-      Assert.ErrorXXX(!(symbol.Value is BigInteger));
+      Debug.Assert(!(symbol.Value is BigInteger));
 
       if (symbol.Value is StaticAddress) {
         StaticAddress staticAddress = (StaticAddress) symbol.Value;
@@ -980,7 +988,7 @@ namespace CCompiler {
       int typeSize = assignSymbol.Type.SizeAddress();
 
       if (resultSymbol.IsTemporary()) {
-        Assert.ErrorXXX(assignTrack == null);
+        Debug.Assert(assignTrack == null);
 
         if (resultTrack == null) {
           resultTrack = new Track(resultSymbol);
@@ -1008,7 +1016,7 @@ namespace CCompiler {
         }
       }
 /*      if (resultSymbol.IsTemporary()) {        
-        Assert.ErrorXXX(resultSymbol.AddressSymbol == null);
+        Debug.Assert(resultSymbol.AddressSymbol == null);
 
         if (assignTrack != null) {
           if (resultTrack != null) {
@@ -1195,7 +1203,7 @@ namespace CCompiler {
         m_trackMap.Remove(unarySymbol);
       }
       else if (resultSymbol == unarySymbol) {
-        Assert.ErrorXXX(unaryTrack == null);
+        Debug.Assert(unaryTrack == null);
         if (middleOperator != MiddleOperator.Plus) {
           AddAssemblyCode(objectOperator, Base(unarySymbol),
                           Offset(unarySymbol), null, typeSize);
@@ -1209,7 +1217,7 @@ namespace CCompiler {
         }
 
         if (resultSymbol.IsTemporary()) {          
-          Assert.ErrorXXX(resultSymbol.AddressSymbol == null);
+          Debug.Assert(resultSymbol.AddressSymbol == null);
           m_trackMap.Add(resultSymbol, unaryTrack);
         }
         else {
@@ -1266,7 +1274,7 @@ namespace CCompiler {
       Track resultTrack = new Track(resultSymbol, resultRegister);
 
       if (resultSymbol.IsTemporary()) {        
-        Assert.ErrorXXX(resultSymbol.AddressSymbol == null);
+        Debug.Assert(resultSymbol.AddressSymbol == null);
         m_trackMap.Add(resultSymbol, resultTrack);
         AddAssemblyCode(AssemblyOperator.empty, resultTrack);
       }
@@ -1327,7 +1335,7 @@ namespace CCompiler {
     public void IntegralBinary(MiddleOperator middleOperator,
                                Symbol resultSymbol,  Symbol leftSymbol,
                                Symbol rightSymbol) {
-      Assert.ErrorXXX((resultSymbol != null) || (middleOperator == MiddleOperator.Compare));
+      Debug.Assert((resultSymbol != null) || (middleOperator == MiddleOperator.Compare));
 
       Track leftTrack = null, rightTrack = null;
       m_trackMap.TryGetValue(leftSymbol, out leftTrack);
@@ -1378,7 +1386,7 @@ namespace CCompiler {
       int typeSize = leftSymbol.Type.Size();
       AssemblyOperator objectOperator = m_middleToIntegralMap[middleOperator];
       
-      //Assert.ErrorXXX(!(leftSymbol.Value is BigInteger));
+      //Debug.Assert(!(leftSymbol.Value is BigInteger));
 
       if (leftTrack != null) {
         if (rightTrack != null) {
@@ -1419,7 +1427,7 @@ namespace CCompiler {
 
         if (resultSymbol != null) {
           if (resultSymbol.IsTemporary()) {            
-            Assert.ErrorXXX(resultSymbol.AddressSymbol == null);
+            Debug.Assert(resultSymbol.AddressSymbol == null);
             m_trackMap.Add(resultSymbol, leftTrack);
           }
           else {
@@ -1430,7 +1438,7 @@ namespace CCompiler {
       }
       /*else if ((leftSymbol.Type.IsArrayFunctionOrString() ||
                (leftSymbol.Value is StaticAddress))) {
-        Assert.ErrorXXX(objectOperator == AssemblyOperator.cmp);
+        Debug.Assert(objectOperator == AssemblyOperator.cmp);
 
         if (rightTrack != null) {
           AddAssemblyCode(objectOperator, leftSymbol.UniqueName, rightTrack);
@@ -1508,7 +1516,7 @@ namespace CCompiler {
 
     public void Dereference(MiddleCode middleCode) {
       Symbol resultSymbol = (Symbol) middleCode[0];
-      Assert.ErrorXXX(resultSymbol.AddressSymbol != null);
+      Debug.Assert(resultSymbol.AddressSymbol != null);
       Track addressTrack = LoadValueToRegister(resultSymbol.AddressSymbol);
       m_trackMap.Add(resultSymbol.AddressSymbol, addressTrack);
     }
@@ -1532,7 +1540,8 @@ namespace CCompiler {
         };
 
     public void FloatingBinary(MiddleCode middleCode) {
-      Assert.ErrorXXX((--m_floatStackSize) >= 0);
+      --m_floatStackSize;
+      Debug.Assert(m_floatStackSize >= 0);
       AddAssemblyCode(m_middleToFloatingMap[middleCode.Operator]);
     }
 
@@ -1551,7 +1560,8 @@ namespace CCompiler {
     // Floating Relation
 
     public void FloatingRelation(MiddleCode middleCode) {
-      Assert.ErrorXXX((m_floatStackSize -= 2) >= 0);
+      m_floatStackSize -= 2;
+      Debug.Assert(m_floatStackSize >= 0);
       int target = (int) middleCode[0];
       AddAssemblyCode(AssemblyOperator.fcompp);
       AddAssemblyCode(AssemblyOperator.fstsw, Register.ax);
@@ -1582,7 +1592,9 @@ namespace CCompiler {
       };
 
     public void PushSymbol(Symbol symbol) {
-      Assert.ErrorXXX((++m_floatStackSize) <= FloatingStackMaxSize);
+      ++m_floatStackSize;
+      Error.Check(m_floatStackSize <= FloatingStackMaxSize,
+                  Message.Floating_stack_overflow);
       Track track;
 
       if ((symbol.Value != null) && 
@@ -1663,14 +1675,15 @@ namespace CCompiler {
       };
 
     public void TopPopSymbol(Symbol symbol, TopOrPop topOrPop) {
-      Assert.ErrorXXX(symbol != null);
+      Debug.Assert(symbol != null);
       Pair<bool,int> pair =
         new Pair<bool,int>(symbol.Type.IsFloating(), symbol.Type.Size());
       AssemblyOperator objectOperator;
 
       if (topOrPop == TopOrPop.Pop) {
         objectOperator = m_floatPopMap[pair];
-        Assert.ErrorXXX((--m_floatStackSize) >= 0);
+        --m_floatStackSize;
+        Debug.Assert(m_floatStackSize >= 0);
       }
       else {
         objectOperator = m_floatTopMap[pair];
@@ -1697,7 +1710,7 @@ namespace CCompiler {
       Type toType = toSymbol.Type, fromType = fromSymbol.Type;
       int toSize = toType.SizeAddress(), fromSize = fromType.SizeAddress();
 
-      //Assert.ErrorXXX(fromSize != toSize);
+      //Debug.Assert(fromSize != toSize);
       Track fromTrack = LoadValueToRegister(fromSymbol);
       AddAssemblyCode(AssemblyOperator.set_track_size, fromTrack, toSize);
 
@@ -2167,7 +2180,7 @@ namespace CCompiler {
               int byteSource = assemblyToByteMap[line + 1],
                   byteTarget = assemblyToByteMap[assemblyTarget];
               int byteDistance = byteTarget - byteSource;
-              Assert.ErrorXXX(byteDistance != 0);
+              Debug.Assert(byteDistance != 0);
               thisCode[0] = byteDistance;
             }
           }

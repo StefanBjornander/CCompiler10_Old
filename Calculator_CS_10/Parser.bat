@@ -1,7 +1,7 @@
 ﻿echo Hello
 
 @C:
-@cd "C:\Users\Stefa\Documents\A A A C_Compiler_Assembler - CSharp\C_Compiler_CSharp\Calculator_CS"
+@cd "C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\Calculator_CS_10"
 @"C:\gppg-distro-1_5_2\binaries\Gppg" /gplex Parser.gppg > Parser.cs
 @"C:\gppg-distro-1_5_2\binaries\Gplex" Scanner.gplex
 @rem @C:\YACC -d Parser.bison

@@ -9,16 +9,16 @@ namespace CCompiler {
     public Track(Symbol symbol, Register? register = null) {
       m_id = m_count++;
       Register = register;
-      Assert.ErrorXXX(symbol != null);
-      //Assert.ErrorXXX(!symbol.Type.IsStructOrUnion());
+      Debug.Assert(symbol != null);
+      //Debug.Assert(!symbol.Type.IsStructOrUnion());
       CurrentSize = m_maxSize = symbol.Type.ReturnSize();
     }
 
     public Track(Type type) {
       m_id = m_count++;
-      Assert.ErrorXXX(type != null);
-      //Assert.ErrorXXX(!type.IsStructOrUnion());
-      Assert.ErrorXXX(!type.IsArrayFunctionOrString());
+      Debug.Assert(type != null);
+      //Debug.Assert(!type.IsStructOrUnion());
+      Debug.Assert(!type.IsArrayFunctionOrString());
       CurrentSize = m_maxSize = type.ReturnSize();
     }
 
@@ -43,8 +43,8 @@ namespace CCompiler {
     public bool Pointer {get; set;}
 
     public static bool Overlaps(Track track1, Track track2) {
-      Assert.ErrorXXX((track1.m_minIndex != -1) && (track1.m_maxIndex != -1));
-      Assert.ErrorXXX((track2.m_minIndex != -1) && (track2.m_maxIndex != -1));
+      Debug.Assert((track1.m_minIndex != -1) && (track1.m_maxIndex != -1));
+      Debug.Assert((track2.m_minIndex != -1) && (track2.m_maxIndex != -1));
       return !(((track1.m_maxIndex < track2.m_minIndex) ||
                 (track2.m_maxIndex < track1.m_minIndex)));
     }

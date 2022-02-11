@@ -1,6 +1,7 @@
 // -rebuild -print Main Malloc CType ErrNo Locale Math SetJmp Signal File Temp Scanf Printf StdLib Time String PrintTest CharacterTest FloatTest LimitsTest AssertTest StringTest LocaleTest SetJmpTest MathTest FileTest StdIOTest SignalTest StackTest MallocTest StdLibTest TimeTest
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Globalization;
@@ -22,9 +23,7 @@ namespace CCompiler {
       System.Threading.Thread.CurrentThread.CurrentCulture =
         CultureInfo.InvariantCulture;
 
-      if (args.Length == 0) {
-        Assert.Error("usage: compiler <filename>");
-      }
+      Error.Check(args.Length > 0, Message.Usage_compiler_filename);
 
       List<string> argList = new List<string>(args);
       bool rebuild = argList.Remove("-rebuild"),
@@ -91,7 +90,7 @@ namespace CCompiler {
       }
       catch (Exception exception) {
         Console.Out.WriteLine(exception.StackTrace);
-        Assert.Error(exception.Message, Message.Parse_error);
+        Error.Report(exception.Message, Message.Parse_error);
       }
     }
 
@@ -145,7 +144,7 @@ namespace CCompiler {
       }
       catch (Exception exception) {
         Console.Out.WriteLine(exception.StackTrace);
-        Assert.Error(exception.Message);
+        Error.Report(exception.Message);      
       }
     }
   
@@ -170,10 +169,10 @@ namespace CCompiler {
         //CCompiler_Main.Scanner.Path = sourceFile;
         CCompiler_Main.Scanner.Line = 2000; 
         CCompiler_Main.Parser parser = new CCompiler_Main.Parser(scanner);
-        Assert.Error(parser.Parse(), Message.Syntax_error);
+        Error.Check(parser.Parse(), Message.Syntax_error);
       }
       catch (IOException ioException) {
-        Assert.Error(false, ioException.StackTrace, Message.Syntax_error);
+        Error.Check(false, ioException.StackTrace, Message.Syntax_error);
       }
 
       if (Start.Linux) {

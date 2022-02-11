@@ -6,9 +6,9 @@
 //
 //  GPLEX Version:  1.2.2
 //  Machine:  LAPTOP-7Q575VHS
-//  DateTime: 27/01/2022 17:54:11
+//  DateTime: 11/02/2022 21:40:50
 //  UserName: stefa
-//  GPLEX input file <MainScanner.gplex - 13/05/2021 15:39:36>
+//  GPLEX input file <MainScanner.gplex - 08/02/2022 23:42:32>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: parser, minimize
@@ -1877,7 +1877,7 @@ int NextState() {
         case 1:
         case 4:
         case 8:
-Assert.Error(yytext, Message.Unknown_character);
+Error.Report(yytext, Message.Unknown_character);
             break;
         case 2:
 if (yytext.Equals("\n")) {
@@ -2154,7 +2154,7 @@ return ((int) Tokens.DIVIDE);
       SymbolTable.StaticSet.Add(yylval.symbol.StaticSymbol);*/
     }
     catch (OverflowException) {
-      Assert.Error(type + ": " + text, Message.Value_overflow);
+      Error.Report(type + ": " + text, Message.Value_overflow);
     }
 
     return ((int) Tokens.VALUE);
@@ -2262,7 +2262,7 @@ return ((int) Tokens.REGISTER);
       return ((int) Tokens.REGISTER_NAME);
     }
     
-    Assert.Error(text, Message.Unknown_register);
+    Error.Report(text, Message.Unknown_register);
   }
             break;
         case 134:
@@ -2378,7 +2378,7 @@ return ((int) Tokens.LEFT_SHIFT_ASSIGN);
       SymbolTable.StaticSet.Add(yylval.symbol.StaticSymbol);*/
     }
     catch (OverflowException) {
-      Assert.Error(type + ": " + text, Message.Value_overflow);
+      Error.Report(type + ": " + text, Message.Value_overflow);
     }
 
     return ((int) Tokens.VALUE);
@@ -2412,7 +2412,7 @@ return ((int) Tokens.MULTIPLY_ASSIGN);
         case 242:
 { CCompiler.Type type = new CCompiler.Type(Sort.SignedChar);
     string text = Slash.SlashToChar(yytext);
-    Assert.Error(text.Length == 3, yytext, Message.Invalid_char_sequence);
+    Error.Check(text.Length == 3, yytext, Message.Invalid_char_sequence);
     yylval.symbol = new Symbol(type, (BigInteger) ((int) text[1]));
     return ((int) Tokens.VALUE);
   }

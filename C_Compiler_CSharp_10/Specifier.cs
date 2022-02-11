@@ -47,7 +47,7 @@ namespace CCompiler {
     }
  
     public Storage Storage {
-      get { Assert.ErrorXXX(m_storage != null);
+      get { Debug.Assert(m_storage != null);
             return m_storage.Value; }
     }
  
@@ -64,7 +64,7 @@ namespace CCompiler {
           int maskValue = (int) obj;
 
           if ((maskValue & totalMaskValue) != 0) {
-            Assert.Error(MaskToString(maskValue),
+            Error.Report(MaskToString(maskValue),
                          Message.Keyword_defined_twice);
           }
 
@@ -72,7 +72,7 @@ namespace CCompiler {
         }
         else {
           if (compoundType != null) {
-            Assert.Error(MaskToString(totalMaskValue),
+            Error.Report(MaskToString(totalMaskValue),
                          Message.Invalid_specifier_sequence);
           }
 
@@ -84,7 +84,7 @@ namespace CCompiler {
       { int totalStorageValue = totalMaskValue & ((int) Mask.StorageMask);
 
         if (totalStorageValue != 0) {
-          Assert.Error(Enum.IsDefined(typeof(Mask), totalStorageValue),
+          Error.Check(Enum.IsDefined(typeof(Mask), totalStorageValue),
                        MaskToString(totalStorageValue),
                        Message.Invalid_specifier_sequence);
           storage = (Storage) totalStorageValue;
@@ -105,18 +105,18 @@ namespace CCompiler {
       }
 
       if (SymbolTable.CurrentTable.Scope == Scope.Parameter) {
-        Assert.Error((storage == Storage.Auto) || 
+        Error.Check((storage == Storage.Auto) || 
                      (storage == Storage.Register), storage, Message.
             Only_auto_or_register_storage_allowed_in_parameter_declaration);
       }
       else if ((SymbolTable.CurrentTable.Scope == Scope.Struct) ||
                (SymbolTable.CurrentTable.Scope == Scope.Union)) {
-          Assert.Error((storage == Storage.Auto) ||
+          Error.Check((storage == Storage.Auto) ||
                        (storage == Storage.Register), storage, Message.
             Only_auto_or_register_storage_allowed_for_struct_or_union_scope);  
       }
       else if (SymbolTable.CurrentTable.Scope == Scope.Global) {
-          Assert.Error((storage == Storage.Extern) ||
+          Error.Check((storage == Storage.Extern) ||
                        (storage == Storage.Static) ||
                        (storage == Storage.Typedef), storage, Message.
         Only_extern____static____or_typedef_storage_allowed_in_global_scope);
@@ -144,7 +144,7 @@ namespace CCompiler {
               break;
 
             case CCompiler.Storage.Extern: {
-                Assert.Error(!itemSymbol.InitializedEnum,
+                Error.Check(!itemSymbol.InitializedEnum,
                               itemSymbol + " = " + itemSymbol.Value,
                   Message.Extern_enumeration_item_cannot_be_initialized);
               }
@@ -167,7 +167,7 @@ namespace CCompiler {
 
         if (sortMaskValue != 0) {
           if (!m_maskToSortMap.ContainsKey(sortMaskValue)) {
-            Assert.Error(MaskToString(sortMaskValue),
+            Error.Report(MaskToString(sortMaskValue),
                          Message.Invalid_specifier_sequence);
           }
 
@@ -191,7 +191,7 @@ namespace CCompiler {
           type.Volatile = isVolatile;
         }
         else {
-          Assert.Error(MaskToString((int)sortMaskValue), Message.
+          Error.Report(MaskToString((int) sortMaskValue), Message.
                        Invalid_specifier_sequence_together_with_type);
         }
 
@@ -210,7 +210,7 @@ namespace CCompiler {
         int maskValue = (int) mask;
 
         if ((maskValue & totalMaskValue) != 0) {
-          Assert.Error(MaskToString(maskValue),
+          Error.Report(MaskToString(maskValue),
                        Message.Keyword_defined_twice);
         }
 

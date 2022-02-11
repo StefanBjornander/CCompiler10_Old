@@ -17,8 +17,8 @@ namespace CCompiler {
       ISet<Graph<Track>> split = totalTrackGraph.Split();
       foreach (Graph<Track> trackGraph in split) {
         List<Track> trackList = new List<Track>(trackGraph.VertexSet);
-        Assert.Error(DeepFirstSearch(trackList, 0, trackGraph),
-                     Message.Out_of_registers);
+        Error.Check(DeepFirstSearch(trackList, 0, trackGraph),
+                    Message.Out_of_registers);
       }
     
       SetRegistersInCodeList(assemblyCodeList);
@@ -51,7 +51,7 @@ namespace CCompiler {
     private static void Check(AssemblyCode assemblyCode, int position) {
       if (assemblyCode[position] is Track) {
         Track track = (Track) assemblyCode[position];
-        Assert.ErrorXXX(track.Register != null);
+        Debug.Assert(track.Register != null);
         assemblyCode[position] =
          AssemblyCode.RegisterToSize(track.Register.Value, track.CurrentSize);
       }

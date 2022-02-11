@@ -139,7 +139,7 @@ WHITE_SPACE [ \t\r\n\f]
       return ((int) Tokens.REGISTER_NAME);
     }
     
-    Assert.Error(text, Message.Unknown_register);
+    Error.Report(text, Message.Unknown_register);
   }
 }
 
@@ -230,7 +230,7 @@ WHITE_SPACE [ \t\r\n\f]
       SymbolTable.StaticSet.Add(yylval.symbol.StaticSymbol);*/
     }
     catch (OverflowException) {
-      Assert.Error(type + ": " + text, Message.Value_overflow);
+      Error.Report(type + ": " + text, Message.Value_overflow);
     }
 
     return ((int) Tokens.VALUE);
@@ -261,7 +261,7 @@ WHITE_SPACE [ \t\r\n\f]
       SymbolTable.StaticSet.Add(yylval.symbol.StaticSymbol);*/
     }
     catch (OverflowException) {
-      Assert.Error(type + ": " + text, Message.Value_overflow);
+      Error.Report(type + ": " + text, Message.Value_overflow);
     }
 
     return ((int) Tokens.VALUE);
@@ -271,7 +271,7 @@ WHITE_SPACE [ \t\r\n\f]
 {CHAR_VALUE} {
   { CCompiler.Type type = new CCompiler.Type(Sort.SignedChar);
     string text = Slash.SlashToChar(yytext);
-    Assert.Error(text.Length == 3, yytext, Message.Invalid_char_sequence);
+    Error.Check(text.Length == 3, yytext, Message.Invalid_char_sequence);
     yylval.symbol = new Symbol(type, (BigInteger) ((int) text[1]));
     return ((int) Tokens.VALUE);
   }
@@ -301,4 +301,4 @@ WHITE_SPACE [ \t\r\n\f]
   }
 }
 
-. { Assert.Error(yytext, Message.Unknown_character); }
+. { Error.Report(yytext, Message.Unknown_character); }

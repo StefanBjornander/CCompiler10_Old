@@ -1,7 +1,7 @@
-﻿/*using System;
+﻿using System;
 using System.Linq;
 using System.Numerics;
-using System.Collections.Generic;*/
+using System.Collections.Generic;
 
 namespace CCompiler {
   public class Type {
@@ -215,7 +215,7 @@ namespace CCompiler {
 
       ISet<string> nameSet = new HashSet<string>();
       foreach (string name in nameList) {
-        Assert.Error(nameSet.Add(name), name, Message.Name_already_defined);
+        Error.Check(nameSet.Add(name), name, Message.Name_already_defined);
       }
     }
 

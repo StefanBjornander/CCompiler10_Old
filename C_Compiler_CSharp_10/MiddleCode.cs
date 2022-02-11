@@ -20,7 +20,10 @@ namespace CCompiler {
       }
 
       /*string s = ToString();
-      if ((s != null) && s.Equals("PopEmpty")) {
+      if ((s != null) && s.Contains("temporary28")) {
+        int i = 1;
+      }
+      if ((s != null) && s.Contains("temporary29")) {
         int i = 1;
       }*/
     }
@@ -148,6 +151,24 @@ namespace CCompiler {
       }
     }
 
+    public override bool Equals(Object obj) {
+      if (obj is MiddleCode) {
+        MiddleCode middleCode = (MiddleCode)obj;
+        return (m_middleOperator == middleCode.m_middleOperator) &&
+               (((m_operandArray[0] == null) && (middleCode.m_operandArray[0] == null)) ||
+                 m_operandArray[0].Equals(middleCode.m_operandArray[0])) &&
+               (((m_operandArray[1] == null) && (middleCode.m_operandArray[1] == null)) ||
+                 m_operandArray[1].Equals(middleCode.m_operandArray[1])) &&
+               (((m_operandArray[2] == null) && (middleCode.m_operandArray[2] == null)) ||
+                 m_operandArray[2].Equals(middleCode.m_operandArray[2]));
+      }
+
+      return false;
+    }
+
+    public override int GetHashCode() {
+      return base.GetHashCode();
+    }
     private static string ToString(object value) {
       if (value != null) {
         return (" "  + value.ToString().Replace("\n", "\\n"));

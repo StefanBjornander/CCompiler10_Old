@@ -86,4 +86,4 @@ WHITE_SPACE [ \t\r\n\f]
   }
 }
 
-. { Assert.Error(yytext, Message.Unknown_character); }
+. { Error.Report(yytext, Message.Unknown_character); }

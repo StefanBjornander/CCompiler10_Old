@@ -60,7 +60,7 @@ namespace CCompiler {
         targetSymbol = new Symbol(targetType);
       }
       else if (sourceType.IsStructOrUnion() && targetType.IsStructOrUnion()) {
-        Assert.Error(sourceType.Equals(targetType), sourceType + " to " +
+        Error.Check(sourceType.Equals(targetType), sourceType + " to " +
                      targetType, Message.Invalid_type_cast);
         targetSymbol = new Symbol(targetType);
       }
@@ -177,7 +177,7 @@ namespace CCompiler {
                         targetSymbol, sourceSymbol);
       }
 
-      Assert.Error(targetSymbol != null, sourceType + " to " +
+      Error.Check(targetSymbol != null, sourceType + " to " +
                    targetType, Message.Invalid_type_cast);
       return (new Expression(targetSymbol, shortList, longList));    
     }
@@ -197,7 +197,7 @@ namespace CCompiler {
         return (new Expression(new Symbol(toType), null, null));
       }
       else if (fromType.IsStructOrUnion() && toType.IsStructOrUnion()) {
-        Assert.Error(fromType.Equals(toType), fromType + " to " + toType,
+        Error.Check(fromType.Equals(toType), fromType + " to " + toType,
                      Message.Invalid_type_cast);
         return (new Expression(new Symbol(toType), fromExpression.ShortList,
                                fromExpression.LongList));
@@ -244,7 +244,7 @@ namespace CCompiler {
                                  codeList));
         }
 
-        Assert.Error(fromType + " to " + toType, Message.Invalid_type_cast);
+        Error.Check(fromType + " to " + toType, Message.Invalid_type_cast);
       }
       else if (fromType.IsFloating()) {
         if (toType.IsFloating()) {
@@ -298,7 +298,7 @@ namespace CCompiler {
           return (new Expression(symbol, null, codeList));
         }
       
-        Assert.Error(fromType + " to " + toType, Message.Invalid_type_cast);
+        Error.Check(fromType + " to " + toType, Message.Invalid_type_cast);
       }
       else if (fromType.IsIntegralArrayOrPointer()) {
         if (toType.IsFloating()) {
@@ -354,10 +354,10 @@ namespace CCompiler {
           return (new Expression(symbol, null, codeList));
         }
 
-        Assert.Error(fromType + " to " + toType, Message.Invalid_type_cast);
+        Error.Check(fromType + " to " + toType, Message.Invalid_type_cast);
       }
       else {
-        Assert.Error(fromType + " to " + toType, Message.Invalid_type_cast);
+        Error.Check(fromType + " to " + toType, Message.Invalid_type_cast);
       }
 
       return null;

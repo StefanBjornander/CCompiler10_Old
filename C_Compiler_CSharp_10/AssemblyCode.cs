@@ -261,18 +261,18 @@ namespace CCompiler {
           break;
 
         case 2:
-          Assert.ErrorXXX(!name.Contains("h"));
+          Debug.Assert(!name.Contains("h"));
           name = name.Replace("l", "x").Replace("e", "").Replace("r", "");
           break;
 
         case 4:
-          Assert.ErrorXXX(!name.Contains("h"));
+          Debug.Assert(!name.Contains("h"));
           name = "e" + name.Replace("l", "x").Replace("e", "")
                                              .Replace("r", "");
           break;
 
         case 8:
-          Assert.ErrorXXX(!name.Contains("h"));
+          Debug.Assert(!name.Contains("h"));
           name = "r" + name.Replace("l", "x").Replace("e", "")
                                              .Replace("r", "");
           break;
@@ -318,7 +318,7 @@ namespace CCompiler {
         return m_indexToSizeMap[index];
       }
 
-      Assert.ErrorXXX(false);
+      Debug.Assert(false);
       return 0;
     }*/
 
@@ -345,12 +345,12 @@ namespace CCompiler {
       foreach (IList<Register> registerList in m_registerListSet) {
         if (registerList.Contains(register)) {
           int index = m_sizeToIndexMap[size];
-          Assert.ErrorXXX((index >= 0) && (index < registerList.Count));
+          Debug.Assert((index >= 0) && (index < registerList.Count));
           return registerList[index];
         }
       }
 
-      Assert.ErrorXXX(false);
+      Debug.Assert(false);
       return default(Register);
     }
 
@@ -438,14 +438,14 @@ namespace CCompiler {
       };
 
     public static Register RegisterToSize(Register register, int size) {
-      Assert.ErrorXXX((size == 1) || (size == 2) || (size == 4) || (size == 8));
+      Debug.Assert((size == 1) || (size == 2) || (size == 4) || (size == 8));
 
       if (m_registerSizeMap[register] == size) {
         return register;
       }
       else {
         Pair<Register,int> pair = new Pair<Register,int>(register, size);
-        Assert.ErrorXXX(m_registerToSizeMap.ContainsKey(pair));
+        Debug.Assert(m_registerToSizeMap.ContainsKey(pair));
         return m_registerToSizeMap[pair];
       }
     }
@@ -532,7 +532,7 @@ namespace CCompiler {
     public static AssemblyOperator OperatorToSize
                                    (AssemblyOperator objectOp, int size) {
       string name = Enum.GetName(typeof(AssemblyOperator), objectOp);    
-      Assert.ErrorXXX(objectOp != AssemblyOperator.interrupt);
+      Debug.Assert(objectOp != AssemblyOperator.interrupt);
     
       switch (size) {
         case 1:
@@ -552,7 +552,7 @@ namespace CCompiler {
           break;
       }
 
-      Assert.ErrorXXX(name.Contains("_"));
+      Debug.Assert(name.Contains("_"));
       return ((AssemblyOperator) Enum.Parse(typeof(AssemblyOperator), name));
     }
 
@@ -624,7 +624,7 @@ namespace CCompiler {
 
       // lahf; syscall
       if (IsNullary()) {
-        Assert.ErrorXXX((operand0 == null) &&  (operand1 == null) && (operand2 == null));
+        Debug.Assert((operand0 == null) &&  (operand1 == null) && (operand2 == null));
         return "\t" + operatorName;
       }
       else if (IsUnary()) {
@@ -637,7 +637,7 @@ namespace CCompiler {
         // inc ax
         else if ((operand0 is Register) && (operand1 == null) &&
                  (operand2 == null)) {
-          Assert.ErrorXXX(!(operand0 is BigInteger));
+          Debug.Assert(!(operand0 is BigInteger));
           return "\t" + operatorName + " " + operand0;
         }
       }
@@ -646,7 +646,7 @@ namespace CCompiler {
         if ((operand0 is Register) && ((operand1 is Register) ||
             (operand1 is string) || (operand1 is BigInteger)) &&
             (operand2 == null)) {
-          Assert.ErrorXXX(!(operand0 is string));
+          Debug.Assert(!(operand0 is string));
           return "\t" + operatorName + " " + operand0 + ", " + operand1;
         }
         // mov ax, [bp + 2]; mov ax, [global + 4]
@@ -719,7 +719,7 @@ namespace CCompiler {
                target;
       }
       else if (IsRelationNotRegister() || IsJumpNotRegister()) {
-        Assert.ErrorXXX(operand2 is int);
+        Debug.Assert(operand2 is int);
         string label = SymbolTable.CurrentFunction.UniqueName +
                         Symbol.SeparatorId + operand2;
         return "\t" + operatorName + " " + label;
@@ -745,7 +745,7 @@ namespace CCompiler {
         return null;
       }
 
-      Assert.ErrorXXX(false);
+      Debug.Assert(false);
       return null;
     }
 
@@ -784,9 +784,9 @@ namespace CCompiler {
       return buffer.ToString();
     }
 
-    public static string MakeLabel(int labelIndex) {
+    /*public static string MakeLabel(int labelIndex) {
       return "label" + Symbol.SeparatorId + labelIndex;
-    }
+    }*/
 
     private string WithSign(object value) {
       int offset = (int) value;
@@ -1191,7 +1191,7 @@ namespace CCompiler {
         return byteList; 
       }*/
 
-      Assert.ErrorXXX(false);
+      Debug.Assert(false);
       return null;
     }
 
@@ -1259,7 +1259,7 @@ namespace CCompiler {
       ObjectCodeInfo info =
         new ObjectCodeInfo(objectOp, operand0, operand1, operand2);
       byte[] byteArray = ObjectCodeTable.MainArrayMap[info];
-      Assert.ErrorXXX(byteArray != null);
+      Debug.Assert(byteArray != null);
       List<byte> byteList = new List<byte>();
 
       foreach (byte b in byteArray) {

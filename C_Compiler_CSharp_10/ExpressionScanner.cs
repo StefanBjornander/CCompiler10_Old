@@ -6,9 +6,9 @@
 //
 //  GPLEX Version:  1.2.2
 //  Machine:  LAPTOP-7Q575VHS
-//  DateTime: 27/01/2022 17:54:22
+//  DateTime: 11/02/2022 21:40:54
 //  UserName: stefa
-//  GPLEX input file <ExpressionScanner.gplex - 30/08/2020 20:44:22>
+//  GPLEX input file <ExpressionScanner.gplex - 08/02/2022 23:41:43>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: parser, minimize
@@ -736,7 +736,7 @@ return ((int) Tokens.EOL);
             break;
         case 2:
         case 17:
-Assert.Error(yytext, Message.Unknown_character);
+Error.Report(yytext, Message.Unknown_character);
             break;
         case 3:
 if (yytext.Equals("\n")) {

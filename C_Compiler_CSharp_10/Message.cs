@@ -1,5 +1,6 @@
 ﻿namespace CCompiler {
   public enum Message {
+    Usage_compiler_filename,
     Keyword_defined_twice,
     Invalid_specifier_sequence,
     Invalid_specifier_sequence_together_with_type,
@@ -85,6 +86,7 @@
     Invalid_type_in_shift_expression,
     Pointer_to_void,
     Invalid_type_in_expression,
+    Invalid_arithmetic_expression,
     Invalid_types_in_addition_expression,
     Invalid_types_in_subtraction_expression,
     Invalid_addition_expression,

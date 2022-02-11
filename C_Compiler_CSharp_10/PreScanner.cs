@@ -6,9 +6,9 @@
 //
 //  GPLEX Version:  1.2.2
 //  Machine:  LAPTOP-7Q575VHS
-//  DateTime: 27/01/2022 17:54:16
+//  DateTime: 11/02/2022 21:40:53
 //  UserName: stefa
-//  GPLEX input file <PreScanner.gplex - 30/12/2020 15:35:26>
+//  GPLEX input file <PreScanner.gplex - 08/02/2022 23:43:25>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: parser, minimize
@@ -766,8 +766,8 @@ int NextState() {
         case 1:
         case 4:
         case 6:
-CCompiler.Assert.Error("<" + yytext + ">",
-    CCompiler.Message.Unknown_character);
+CCompiler.Error.Report("<" + yytext + ">",
+                           CCompiler.Message.Unknown_character);
             break;
         case 2:
         case 9:

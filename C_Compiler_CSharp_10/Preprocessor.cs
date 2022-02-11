@@ -32,7 +32,7 @@ namespace CCompiler {
       }
 
       DoProcess(file);
-      Assert.Error(m_ifElseChainStack.Count == 0, Message.
+      Error.Check(m_ifElseChainStack.Count == 0, Message.
                    If___ifdef____or_ifndef_directive_without_matching_endif);
     }
 
@@ -56,7 +56,7 @@ namespace CCompiler {
       }*/
 
       TraverseLineList(lineList);
-      Assert.Error(m_ifElseChainStack.Count ==
+      Error.Check(m_ifElseChainStack.Count ==
         stackSize, Message.Unbalanced_if_and_endif_directive_structure);
     }
 
@@ -105,7 +105,7 @@ namespace CCompiler {
 
           for (; true; ++index) {
             if (index == buffer.Length) {
-              Assert.Error(Message.Unfinished_block_comment);
+              Error.Report(Message.Unfinished_block_comment);            
             }
             else if ((buffer[index] == '*') && (buffer[index + 1] == '/')) {
               buffer[index++] = ' ';
@@ -138,10 +138,10 @@ namespace CCompiler {
 
           for (; true; ++index) {
             if (index == buffer.Length) {
-              Assert.Error(Message.Unfinished_character);
+              Error.Report(Message.Unfinished_character);
             }
             else if (buffer[index] == '\n') {
-              Assert.Error(Message.Newline_in_character);
+              Error.Report(Message.Newline_in_character);
             }
             else if ((buffer[index] == '\\') && (buffer[index] == '\'')) {
               ++index;
@@ -156,10 +156,10 @@ namespace CCompiler {
 
           for (; true; ++index) {
             if (index == buffer.Length) {
-              Assert.Error(Message.Unfinished_string);
+              Error.Report(Message.Unfinished_string);
             }
             else if (buffer[index] == '\n') {
-              Assert.Error(Message.Newline_in_string);
+              Error.Report(Message.Newline_in_string);
             }
             else if ((buffer[index] == '\\') && (buffer[index] == '\"')) {
               ++index;
@@ -338,7 +338,7 @@ namespace CCompiler {
                 DoLine(tokenList);
               }
               else if (secondTokenName.Equals("error")) {
-                Assert.Error(TokenListToString
+                Error.Report(TokenListToString
                              (tokenList.GetRange(1, tokenList.Count - 1)));
               }
             }
@@ -392,13 +392,13 @@ namespace CCompiler {
     private void DoLine(List<Token> tokenList) {
       int listSize = tokenList.Count;
 
-      Assert.Error((listSize >= 2) && (listSize <= 4), 
+      Error.Check((listSize >= 2) && (listSize <= 4), 
                     TokenListToString(tokenList),
                     Message.Invalid_preprocessor_directive);
 
       if (listSize >= 3) {
         string lineText = (string) tokenList[2].Value;
-        Assert.Error(int.TryParse(lineText, out CCompiler_Main.Scanner.Line),
+        Error.Check(int.TryParse(lineText, out CCompiler_Main.Scanner.Line),
                                   lineText, Message.Invalid_line_number);
       }
 
@@ -437,12 +437,12 @@ namespace CCompiler {
           includeFile = new FileInfo(Start.SourcePath + file);
         }
         else {
-          Assert.Error(TokenListToString(tokenList),
+          Error.Report(TokenListToString(tokenList),
                        Message.Invalid_preprocessor_directive);
         }
       }
 
-      Assert.Error(!m_includeStack.Contains(includeFile),
+      Error.Check(!m_includeStack.Contains(includeFile),
                    includeFile.FullName, Message.Repeted_include_statement);
       m_includeStack.Push(includeFile);
       m_includeSet.Add(includeFile);
@@ -464,7 +464,7 @@ namespace CCompiler {
     // ------------------------------------------------------------------------
 
     public void DoDefine(List<Token> tokenList) {
-      Assert.Error((tokenList[2].Id == CCompiler_Pre.Tokens.NAME) ||
+      Error.Check((tokenList[2].Id == CCompiler_Pre.Tokens.NAME) ||
                    (tokenList[2].Id ==
                     CCompiler_Pre.Tokens.NAME_WITH_PARENTHESES),
                    TokenListToString(tokenList),
@@ -480,11 +480,11 @@ namespace CCompiler {
 
         while (true) {
           Token nextToken = tokenList[tokenIndex++];
-          Assert.Error(nextToken.Id == CCompiler_Pre.Tokens.NAME,
+          Error.Check(nextToken.Id == CCompiler_Pre.Tokens.NAME,
                        nextToken.ToString(),
                        Message.Invalid_macro_definition);
           string paramName = (string) nextToken.Value;
-          Assert.Error(!paramMap.ContainsKey(paramName),
+          Error.Check(!paramMap.ContainsKey(paramName),
                        paramName, Message.Repeated_macro_parameter);
           paramMap.Add(paramName, paramIndex++);
 
@@ -496,7 +496,7 @@ namespace CCompiler {
             break;
           }
           else {
-            Assert.Error(nextToken.ToString(),
+            Error.Report(nextToken.ToString(),
                          Message.Invalid_macro_definition);
           }
         }
@@ -533,18 +533,18 @@ namespace CCompiler {
         m_macroMap.Add(name, macro);
       }
       else {
-        Assert.Error(m_macroMap[name].Equals(macro), name,
+        Error.Check(m_macroMap[name].Equals(macro), name,
                      Message.Invalid_macro_redefinition);
       }
     }
 
     public void DoUndef(List<Token> tokenList) {
-      Assert.Error((tokenList[2].Id == CCompiler_Pre.Tokens.NAME) &&
+      Error.Check((tokenList[2].Id == CCompiler_Pre.Tokens.NAME) &&
                    (tokenList[3].Id == CCompiler_Pre.Tokens.END_OF_LINE),
                    TokenListToString(tokenList),
                    Message.Invalid_undef_directive);
       string name = tokenList[2].ToString();
-      Assert.Error(m_macroMap.Remove(name), name,
+      Error.Check(m_macroMap.Remove(name), name,
                    Message.Macro_not_defined);
     }
 
@@ -569,20 +569,20 @@ namespace CCompiler {
         MacroMap = m_macroMap;
         CCompiler_Exp.Parser expressionParser =
           new CCompiler_Exp.Parser(expressionScanner, m_macroMap);
-        Assert.Error(expressionParser.Parse(), Message.Preprocessor_parser);
+        Error.Check(expressionParser.Parse(), Message.Preprocessor_parser);
         result = (int) PreProcessorResult;
         memoryStream.Close();
       }
       catch (Exception exception) {
         Console.Out.WriteLine(exception.StackTrace);
-        Assert.Error(line, Message.Invalid_expression);
+        Error.Report(line, Message.Invalid_expression);
       }
 
       return (result != 0);
     }
 
     private void DoIfDefined(List<Token> tokenList) {
-      Assert.Error((tokenList[2].Id == CCompiler_Pre.Tokens.NAME) &&
+      Error.Check((tokenList[2].Id == CCompiler_Pre.Tokens.NAME) &&
                    (tokenList[3].Id == CCompiler_Pre.Tokens.END_OF_LINE),
                    TokenListToString(tokenList),
                    Message.Invalid_preprocessor_directive);
@@ -591,7 +591,7 @@ namespace CCompiler {
     }
 
     private void DoIfNotDefined(List<Token> tokenList) {
-      Assert.Error((tokenList[2].Id == CCompiler_Pre.Tokens.NAME) &&
+      Error.Check((tokenList[2].Id == CCompiler_Pre.Tokens.NAME) &&
                    (tokenList[3].Id == CCompiler_Pre.Tokens.END_OF_LINE),
                    TokenListToString(tokenList),
                    Message.Invalid_preprocessor_directive);
@@ -600,11 +600,11 @@ namespace CCompiler {
     }
 
     private void DoElseIf(List<Token> tokenList) {
-      Assert.Error(m_ifElseChainStack.Count > 0, Message.
+      Error.Check(m_ifElseChainStack.Count > 0, Message.
        Elif_directive_without_preceeding_if____ifdef____or_ifndef_directive);
       IfElseChain ifElseChain = m_ifElseChainStack.Pop();
 
-      Assert.Error(!ifElseChain.ElseStatus,
+      Error.Check(!ifElseChain.ElseStatus,
                    Message.Elif_directive_following_else_directive);
 
       if (ifElseChain.FormerStatus) {
@@ -619,14 +619,14 @@ namespace CCompiler {
     }
 
     private void DoElse(List<Token> tokenList) {
-      Assert.Error(m_ifElseChainStack.Count > 0, Message.
+      Error.Check(m_ifElseChainStack.Count > 0, Message.
        Else_directive_without_preceeding_if____ifdef____or_ifndef_directive);
-      Assert.Error(tokenList[2].Id == CCompiler_Pre.Tokens.END_OF_LINE,
+      Error.Check(tokenList[2].Id == CCompiler_Pre.Tokens.END_OF_LINE,
                    TokenListToString(tokenList),
                    Message.Invalid_preprocessor_directive);
 
       IfElseChain ifElseChain = m_ifElseChainStack.Pop();
-      Assert.Error(!ifElseChain.ElseStatus,
+      Error.Check(!ifElseChain.ElseStatus,
                    Message.Else_directive_after_else_directive);
 
       bool formerStatus = ifElseChain.FormerStatus;
@@ -635,9 +635,9 @@ namespace CCompiler {
     }
 
     private void DoEndIf(List<Token> tokenList) {
-      Assert.Error(m_ifElseChainStack.Count > 0, Message.
+      Error.Check(m_ifElseChainStack.Count > 0, Message.
       Endif_directive_without_preceeding_if____ifdef____or_ifndef_directive);
-      Assert.Error(tokenList[2].Id == CCompiler_Pre.Tokens.END_OF_LINE,
+      Error.Check(tokenList[2].Id == CCompiler_Pre.Tokens.END_OF_LINE,
                    tokenList[2].ToString(),
                    Message.Invalid_preprocessor_directive);
       m_ifElseChainStack.Pop();
@@ -657,7 +657,7 @@ namespace CCompiler {
 
           if (!nameStack.Contains(name) && m_macroMap.ContainsKey(name)) {            
             Macro macro = m_macroMap[name];
-            Assert.Error(macro.Parameters == 0, name, Message.
+            Error.Check(macro.Parameters == 0, name, Message.
                          Invalid_number_of_parameters_in_macro_call);
             List<Token> cloneListX = CloneList(macro.TokenList);
             nameStack.Push(name);
@@ -725,7 +725,7 @@ namespace CCompiler {
               nextToken.ClearNewlineCount();
               
               Token token = tokenList[countIndex];
-              Assert.Error(token.Id != CCompiler_Pre.Tokens.END_OF_LINE,
+              Error.Check(token.Id != CCompiler_Pre.Tokens.END_OF_LINE,
                            Message.Invalid_end_of_macro_call);
               
               switch (token.Id) {
@@ -743,7 +743,7 @@ namespace CCompiler {
                 default:
                   if ((level == 1) &&
                       (token.Id == CCompiler_Pre.Tokens.COMMA)) {
-                    Assert.Error(subList.Count > 0, name,
+                    Error.Check(subList.Count > 0, name,
                                   Message.Empty_macro_parameter);
                     SearchForMacros(subList, nameStack); // XXX
                     mainList.Add(subList);
@@ -756,7 +756,7 @@ namespace CCompiler {
               }
               
               if (level == 0) {
-                Assert.Error(subList.Count > 0, name,
+                Error.Check(subList.Count > 0, name,
                               Message.Empty_macro_parameter_list);
                 mainList.Add(subList);
                 break;
@@ -766,7 +766,7 @@ namespace CCompiler {
             }
 
             Macro macro = m_macroMap[name];
-            Assert.Error(macro.Parameters == mainList.Count, name,
+            Error.Check(macro.Parameters == mainList.Count, name,
                          Message.Invalid_number_of_parameters_in_macro_call);
             
             List<Token> cloneList = CloneList(macro.TokenList);

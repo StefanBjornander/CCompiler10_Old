@@ -66,9 +66,9 @@ namespace CCompiler {
       
         if (sourceCode.IsGoto() || sourceCode.IsCarry() ||
             sourceCode.IsRelation()) {
-          Assert.ErrorXXX(sourceCode[0] is MiddleCode);
+          Debug.Assert(sourceCode[0] is MiddleCode);
           MiddleCode targetCode = (MiddleCode) sourceCode[0];
-          Assert.ErrorXXX(addressMap.ContainsKey(targetCode));
+          Debug.Assert(addressMap.ContainsKey(targetCode));
           sourceCode[0] = addressMap[targetCode];
         }
       }
@@ -228,7 +228,7 @@ namespace CCompiler {
         }
         else if (middleCode.Operator == MiddleOperator.FunctionEnd) {
           Symbol funcSymbol = (Symbol) middleCode[0];
-          Assert.Error(funcSymbol.Type.ReturnType.IsVoid(),
+          Error.Check(funcSymbol.Type.ReturnType.IsVoid(),
                        funcSymbol.Name,
                        Message.Reached_the_end_of_a_non__void_function);
           return;
@@ -403,7 +403,6 @@ namespace CCompiler {
         }
       }
     }
-
 
     private void SematicOptimization() {
       for (int index = 0; index < m_middleCodeList.Count; ++index) {
@@ -720,7 +719,7 @@ namespace CCompiler {
 
         switch (middleCode.Operator) {
           case MiddleOperator.Empty:
-            //Assert.ErrorXXX((symbol0 == null) && (symbol1 == null) && (symbol2 == null));
+            //Debug.Assert((symbol0 == null) && (symbol1 == null) && (symbol2 == null));
             break;
 
           case MiddleOperator.PreCall: {

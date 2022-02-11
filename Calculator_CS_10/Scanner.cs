@@ -5,10 +5,10 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  Machine:  STEFAN1968
-//  DateTime: 2020-10-12 17:07:46
-//  UserName: Stefan
-//  GPLEX input file <Scanner.gplex - 2020-08-29 19:43:25>
+//  Machine:  LAPTOP-7Q575VHS
+//  DateTime: 08/02/2022 16:16:06
+//  UserName: stefa
+//  GPLEX input file <Scanner.gplex - 08/02/2022 12:50:19>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: parser, minimize
@@ -124,8 +124,8 @@ namespace Calculator
         
         enum Result {accept, noMatch, contextFound};
 
-        const int maxAccept = 61;
-        const int initial = 62;
+        const int maxAccept = 62;
+        const int initial = 63;
         const int eofNum = 0;
         const int goStart = -1;
         const int INITIAL = 0;
@@ -162,21 +162,21 @@ namespace Calculator
         }
     };
 
-    static int[] startState = new int[] {62, 0};
+    static int[] startState = new int[] {63, 0};
 
-    static Table[] NxS = new Table[65] {
+    static Table[] NxS = new Table[68] {
 /* NxS[   0] */ new Table(0, 0, 0, null),
 /* NxS[   1] */ new Table(0, 0, -1, null),
 /* NxS[   2] */ new Table(0, 0, -1, null),
-/* NxS[   3] */ new Table(34, 1, 64, new sbyte[] {61}),
+/* NxS[   3] */ new Table(34, 1, 67, new sbyte[] {62}),
 /* NxS[   4] */ new Table(0, 0, -1, null),
 /* NxS[   5] */ new Table(0, 0, -1, null),
 /* NxS[   6] */ new Table(0, 0, -1, null),
 /* NxS[   7] */ new Table(0, 0, -1, null),
 /* NxS[   8] */ new Table(0, 0, -1, null),
 /* NxS[   9] */ new Table(0, 0, -1, null),
-/* NxS[  10] */ new Table(47, 1, -1, new sbyte[] {60}),
-/* NxS[  11] */ new Table(46, 12, -1, new sbyte[] {63, -1, 11, 11, 11, 11, 
+/* NxS[  10] */ new Table(42, 6, -1, new sbyte[] {65, -1, -1, -1, -1, 60}),
+/* NxS[  11] */ new Table(46, 12, -1, new sbyte[] {64, -1, 11, 11, 11, 11, 
           11, 11, 11, 11, 11, 11}),
 /* NxS[  12] */ new Table(0, 0, -1, null),
 /* NxS[  13] */ new Table(0, 0, -1, null),
@@ -453,8 +453,11 @@ namespace Calculator
 /* NxS[  59] */ new Table(48, 10, -1, new sbyte[] {59, 59, 59, 59, 59, 59, 
           59, 59, 59, 59}),
 /* NxS[  60] */ new Table(10, 1, 60, new sbyte[] {-1}),
-/* NxS[  61] */ new Table(0, 0, -1, null),
-/* NxS[  62] */ new Table(9, 114, 1, new sbyte[] {2, 2, 1, 2, 2, 1, 
+/* NxS[  61] */ new Table(10, 33, 65, new sbyte[] {-1, 65, 65, 65, 65, 65, 
+          65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 
+          65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 66}),
+/* NxS[  62] */ new Table(0, 0, -1, null),
+/* NxS[  63] */ new Table(9, 114, 1, new sbyte[] {2, 2, 1, 2, 2, 1, 
           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
           1, 2, 1, 3, 1, 1, 1, 1, 1, 4, 5, 6, 7, 8, 9, 1, 
           10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 1, 12, 1, 13, 1, 
@@ -462,9 +465,15 @@ namespace Calculator
           14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 1, 1, 1, 1, 
           14, 1, 15, 14, 16, 14, 17, 14, 14, 14, 14, 14, 14, 18, 14, 19, 
           14, 14, 14, 20, 21, 22, 14, 14, 23, 14, 14, 14}),
-/* NxS[  63] */ new Table(48, 10, -1, new sbyte[] {59, 59, 59, 59, 59, 59, 
+/* NxS[  64] */ new Table(48, 10, -1, new sbyte[] {59, 59, 59, 59, 59, 59, 
           59, 59, 59, 59}),
-/* NxS[  64] */ new Table(34, 1, 64, new sbyte[] {61}),
+/* NxS[  65] */ new Table(10, 33, 65, new sbyte[] {-1, 65, 65, 65, 65, 65, 
+          65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 
+          65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 66}),
+/* NxS[  66] */ new Table(10, 38, 65, new sbyte[] {-1, 65, 65, 65, 65, 65, 
+          65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 
+          65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 66, 65, 65, 65, 65, 61}),
+/* NxS[  67] */ new Table(34, 1, 67, new sbyte[] {62}),
     };
 
 int NextState() {
@@ -890,7 +899,7 @@ int NextState() {
     {
         case eofNum:
             switch (currentStart) {
-                case 62:
+                case 63:
 return ((int) Tokens.EOF);
                     break;
             }
@@ -1018,6 +1027,11 @@ return ((int) Tokens.ASSIGN);
 }
             break;
         case 61:
+{
+  // Empty.
+}
+            break;
+        case 62:
 yylval.text = yytext.Substring(1, yytext.Length - 2);
   return ((int) Tokens.TEXT);
             break;

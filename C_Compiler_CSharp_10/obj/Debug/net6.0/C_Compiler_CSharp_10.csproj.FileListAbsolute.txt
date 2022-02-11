@@ -39,7 +39,6 @@ C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\bin\Debug
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\bin\Debug\net6.0\ref\C_Compiler_CSharp_10.dll
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\bin\Debug\net6.0\C_Compiler_CSharp_10.pdb
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\bin\Debug\net6.0\QUT.ShiftReduceParser.dll
-C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug\net6.0\C_Compiler_CSharp_10.csproj.AssemblyReference.cache
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug\net6.0\C_Compiler_CSharp_10.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug\net6.0\C_Compiler_CSharp_10.AssemblyInfoInputs.cache
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug\net6.0\C_Compiler_CSharp_10.AssemblyInfo.cs
@@ -49,3 +48,4 @@ C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug\net6.0\ref\C_Compiler_CSharp_10.dll
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug\net6.0\C_Compiler_CSharp_10.pdb
 C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug\net6.0\C_Compiler_CSharp_10.genruntimeconfig.cache
+C:\Users\stefa\Documents\A A C_Compiler_CSharp_10\C_Compiler_CSharp_10\obj\Debug\net6.0\C_Compiler_CSharp_10.csproj.AssemblyReference.cache

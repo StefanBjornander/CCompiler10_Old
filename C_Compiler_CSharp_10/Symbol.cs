@@ -63,8 +63,8 @@ namespace CCompiler {
     }
 
     public Symbol(Type type, object value) {
-      Assert.ErrorXXX(value != null);
-      Assert.ErrorXXX(!(value is bool));
+      Debug.Assert(value != null);
+      Debug.Assert(!(value is bool));
 
       m_storage = Storage.Static;
       m_type = type;
@@ -99,7 +99,7 @@ namespace CCompiler {
           bigValue += TypeSize.GetMaxValue(type.Sort) + 1;
         }
 
-        Assert.Error((bigValue >= TypeSize.GetMinValue(type.Sort)) &&
+        Error.Check((bigValue >= TypeSize.GetMinValue(type.Sort)) &&
                      (bigValue <= TypeSize.GetMaxValue(type.Sort)),
                      type + ": " + value, Message.Value_overflow);
         return bigValue;
@@ -233,12 +233,6 @@ namespace CCompiler {
         }
       }
     }*/
-
-    public static string SimpleName(string name) {
-      int index = name.LastIndexOf(Symbol.SeparatorId);
-      return ((index != -1) ? name.Substring(index + 1)
-                            : name).Replace(NumberId, "");
-    }
   }
 }
 

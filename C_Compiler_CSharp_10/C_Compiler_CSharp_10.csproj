@@ -7,6 +7,10 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
+  </PropertyGroup>
+	
   <ItemGroup>
     <Reference Include="QUT.ShiftReduceParser">
       <HintPath>QUT.ShiftReduceParser.dll</HintPath>

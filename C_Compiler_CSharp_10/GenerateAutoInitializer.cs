@@ -67,7 +67,7 @@ namespace CCompiler {
                 toType.ArraySize = fromList.Count;
               }
               else {
-                Assert.Error(fromList.Count <= toType.ArraySize,
+                Error.Check(fromList.Count <= toType.ArraySize,
                              toType, Message.Too_many_initializers_in_array);
               }
 
@@ -84,7 +84,7 @@ namespace CCompiler {
 
           case Sort.Struct: {
             List<Symbol> memberList = toType.MemberList; 
-              Assert.Error(fromList.Count <= memberList.Count, toType,
+              Error.Check(fromList.Count <= memberList.Count, toType,
                            Message.Too_many_initializers_in_struct);
 
               for (int index = 0; index < fromList.Count; ++index) {
@@ -100,7 +100,7 @@ namespace CCompiler {
 
           case Sort.Union: {
               List<Symbol> memberList = toType.MemberList;
-              Assert.Error(fromList.Count == 1, toType,
+              Error.Check(fromList.Count == 1, toType,
                            Message.Only_one_Initlizer_allowed_in_unions);
               Symbol memberSymbol = memberList[0];
               Symbol subSymbol = new Symbol(memberSymbol.Type); 
@@ -111,7 +111,7 @@ namespace CCompiler {
             break;
 
           default:
-            Assert.Error(toType, Message.
+            Error.Report(toType, Message.
                 Only_array_struct_or_union_can_be_initialized_by_a_list);
             break;
         }
